@@ -1,0 +1,100 @@
+Here’s how you can perform Visualization of Results and Extract Model Insights for your handwritten digit recognition project:
+
+
+---
+
+1. Plot Training and Validation Accuracy/Loss
+
+Visualize model performance over epochs.
+
+import matplotlib.pyplot as plt
+
+# Accuracy
+plt.plot(history.history['accuracy'], label='Train Accuracy')
+plt.plot(history.history['val_accuracy'], label='Val Accuracy')
+plt.title('Model Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.show()
+
+# Loss
+plt.plot(history.history['loss'], label='Train Loss')
+plt.plot(history.history['val_loss'], label='Val Loss')
+plt.title('Model Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+plt.show()
+
+
+---
+
+2. Confusion Matrix
+
+Understand which digits the model confuses most often.
+
+import numpy as np
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+y_pred = model.predict(x_test)
+y_pred_classes = np.argmax(y_pred, axis=1)
+y_true = np.argmax(y_test, axis=1)
+
+cm = confusion_matrix(y_true, y_pred_classes)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=range(10))
+disp.plot(cmap=plt.cm.Blues)
+plt.title("Confusion Matrix")
+plt.show()
+
+
+---
+
+3. Visualize Some Predictions
+
+Show predictions for a few test images.
+
+plt.figure(figsize=(10, 5))
+for i in range(10):
+    plt.subplot(2, 5, i + 1)
+    plt.imshow(x_test[i].reshape(28, 28), cmap='gray')
+    plt.title(f"Pred: {y_pred_classes[i]}, True: {y_true[i]}")
+    plt.axis('off')
+plt.tight_layout()
+plt.show()
+
+
+---
+
+4. Identify Misclassified Digits
+
+Helpful for improving the model.
+
+misclassified_idx = np.where(y_pred_classes != y_true)[0]
+
+plt.figure(figsize=(10, 5))
+for i in range(10):
+    idx = misclassified_idx[i]
+    plt.subplot(2, 5, i + 1)
+    plt.imshow(x_test[idx].reshape(28, 28), cmap='gray')
+    plt.title(f"Pred: {y_pred_classes[idx]}, True: {y_true[idx]}")
+    plt.axis('off')
+plt.tight_layout()
+plt.show()
+
+
+---
+
+5. Model Insights
+
+High Accuracy on simple digits like 1, 7, 0.
+
+Confusion commonly occurs between similar-looking digits like 5 & 3, or 9 & 4.
+
+Drop in Validation Accuracy may suggest overfitting; use regularization/dropout/augmentation.
+
+
+
+---
+
+Let me know if you'd like to include Grad-CAM or filter visualizations for deeper interpretability.
